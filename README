@@ -1,0 +1,13 @@
+sensei-raw-ctl
+
+This program makes it possible to change the configuration of your SteelSeries
+Sensei Raw mouse from within Linux, *BSD or any other POSIX-compatible system
+supported by libusb.
+
+Installation
+============
+$ mkdir build
+$ cd build
+$ cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
+# make install
+
