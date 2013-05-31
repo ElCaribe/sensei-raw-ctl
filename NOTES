@@ -1,0 +1,64 @@
+The SteelSeries Sensei Raw device driver communicates with the mouse using a
+very simple protocol.  The packets are always 32 bytes long, and there are just
+a few commands in use.  Any unused bytes should be filled with zeroes.  These
+are normal SET_REPORT messages, with Report Type set to two (Output), and both
+Report ID and wIndex set to zero.
+
+0x02 0x00 <MODE>
+  Changes the mode of the mouse to MODE:
+    0x01 is a legacy mode that only reports 5 mouse buttons and sends keyboard
+      codes for Page Up and Page Down keys instead of the sixth and seventh
+	  button of the mouse.
+    0x02 is the mode used by the Windows driver.  Here the mouse sends reports
+	  for the 6th and 7th button like normal buttons, and the DPI switch button
+	  as the 8th, with a 0x80 code.
+
+0x03 0x01 <CPI>
+  Sets the CPI used by the mouse when the CPI led is off.  The values that can
+  be legally used lie between <0x01; 0x3f> and correspond to factors of 90 (that
+  is, the lowest value represent CPI of 90 and the highest one represents 5760.
+
+0x03 0x02 <CPI>
+  Like above, only sets the CPI for the case when the led is on.
+
+0x05 0x01 <INTENSITY>
+0x05 0x02 <INTENSITY>
+  Sets the LED intensity (both the scrolling wheel and the SteelSeries logo).
+  The two commands are equivalent.  The intensity can be:
+    0x01 for off
+	0x02 for low intensity
+	0x03 for medium intensity
+	0x04 for high intensity
+
+0x07 0x01 <PULSATION>
+0x07 0x02 <PULSATION>
+  Sets the pulsation speed for the light emitting diodes.  The two commands are
+  equivalent.  The pulsation speed can be one of the following:
+    0x01 for steady, as in no alteration of light intensity at all
+	0x02 for slow
+	0x03 for medium speed
+	0x04 for fast
+
+0x04 0x00 <POLLING>
+  Sets the polling frequency.  The value can be one of these values:
+    0x01 for 1000 Hz
+	0x02 for 500 Hz
+	0x03 for 250 Hz
+	0x04 for 125 Hz
+
+0x09
+  Saves the the current configuration of the mouse to ROM.  The device will
+  start with these values when disconnected from the computer and reconnected
+  again.
+
+All GET_REPORT requests are being answered with the same data, which seems to
+be some internal structure of 256 bytes.  Any larger requests are being
+padded with zeroes.  Located in this blob are all the current settings of the
+mouse, except for the mode.
+
+Byte 102 holds the led intensity
+Byte 103 holds the pulsation setting
+Byte 107 holds the CPI value when the corresponding led is off
+Byte 108 holds the CPI value when the corresponding led is on
+Byte 128 holds the polling frequency setting
+
