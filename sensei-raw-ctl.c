@@ -86,8 +86,8 @@ out:
 #define USB_VENDOR_STEELSERIES  0x1038
 #define USB_PRODUCT_STEELSERIES_SENSEI  0x1369
 
-#define GET_REPORT  0x01
-#define SET_REPORT  0x09
+#define USB_GET_REPORT  0x01
+#define USB_SET_REPORT  0x09
 
 #define SENSEI_CTL_IFACE  0
 
@@ -108,7 +108,7 @@ enum sensei_pulsation
 /* Just guessing the names, could be anything */
 enum sensei_mode
 {
-	MODE_COMPATIBILITY = 1,
+	MODE_LEGACY = 1,
 	MODE_NORMAL
 };
 
@@ -148,7 +148,7 @@ sensei_send_command (libusb_device_handle *device,
 {
 	int result = libusb_control_transfer (device, LIBUSB_ENDPOINT_OUT
 		| LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE,
-		SET_REPORT, 0x0200, 0x0000, data, length, 0);
+		USB_SET_REPORT, 0x0200, 0x0000, data, length, 0);
 	return result < 0 ? result : 0;
 }
 
@@ -215,7 +215,7 @@ sensei_load_config (libusb_device_handle *device,
 
 	int result = libusb_control_transfer (device, LIBUSB_ENDPOINT_IN
 		| LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE,
-		GET_REPORT, 0x0300, 0x0000, data, sizeof data, 0);
+		USB_GET_REPORT, 0x0300, 0x0000, data, sizeof data, 0);
 	if (result < 0)
 		return result;
 
@@ -287,7 +287,7 @@ show_usage (const char *program_name)
 	printf ("  --version       Show program version and exit\n");
 	printf ("  --show          Show current mouse settings and exit\n");
 	printf ("  --mode X        Set the mode of the mouse"
-			                 " (can be either 'compat' or 'normal')\n");
+	                         " (can be either 'legacy' or 'normal')\n");
 	printf ("  --polling X     Set polling to X Hz (1000, 500, 250, 125)\n");
 	printf ("  --cpi-on X      Set CPI with the LED on to X\n");
 	printf ("  --cpi-off X     Set CPI with the LED off to X\n");
@@ -369,8 +369,8 @@ parse_options (int argc, char *argv[],
 		options->save_to_rom = true;
 		break;
 	case 'm':
-		if (!strcasecmp (optarg, "compat"))
-			new_config->mode = MODE_COMPATIBILITY;
+		if (!strcasecmp (optarg, "legacy"))
+			new_config->mode = MODE_LEGACY;
 		else if (!strcasecmp (optarg, "normal"))
 			new_config->mode = MODE_NORMAL;
 		else

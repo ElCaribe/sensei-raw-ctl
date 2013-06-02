@@ -6,13 +6,66 @@ find_package (PkgConfig REQUIRED)
 pkg_check_modules (dependencies REQUIRED libusb-1.0)
 include_directories (${dependencies_INCLUDE_DIRS})
 
-configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
-	${CMAKE_CURRENT_BINARY_DIR}/config.h)
-include_directories (${CMAKE_CURRENT_BINARY_DIR})
-
-add_executable (${CMAKE_PROJECT_NAME} ${CMAKE_PROJECT_NAME}.c)
-target_link_libraries (${CMAKE_PROJECT_NAME} ${dependencies_LIBRARIES})
+option (DEVELOPER_MODE "Developer mode" OFF)
 
 include (GNUInstallDirs)
-install (TARGETS ${CMAKE_PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
+configure_file (${PROJECT_SOURCE_DIR}/config.h.in
+	${PROJECT_BINARY_DIR}/config.h)
+include_directories (${PROJECT_BINARY_DIR})
 
+add_executable (${PROJECT_NAME} ${PROJECT_NAME}.c)
+target_link_libraries (${PROJECT_NAME} ${dependencies_LIBRARIES})
+install (TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+pkg_check_modules (gtk3 gtk+-3.0)
+set (BUILD_GUI ${gtk3_FOUND} CACHE BOOL "Whether to build the GTK+ frontend")
+
+if (BUILD_GUI)
+	include_directories (${gtk3_INCLUDE_DIRS})
+	link_directories (${gtk3_LIBRARY_DIRS})
+
+	set (ui_in  ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}-gui.ui)
+	set (ui_out ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-gui-ui.c)
+	add_custom_command (OUTPUT ${ui_out}
+		COMMAND ${CMAKE_COMMAND} -D "input=${ui_in}" -D "output=${ui_out}"
+			-D var_name=ui -P "${PROJECT_SOURCE_DIR}/quote-file.cmake"
+		DEPENDS ${ui_in}
+		COMMENT "Wrapping the UI file into a source file" VERBATIM)
+
+	configure_file (${PROJECT_SOURCE_DIR}/${PROJECT_NAME}-gui.desktop.in
+		${PROJECT_BINARY_DIR}/${PROJECT_NAME}-gui.desktop)
+	install (FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-gui.desktop
+		DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+	install (FILES ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}-gui.svg
+		DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
+
+	set (polkit_id "org.${PROJECT_NAME}.policy")
+	configure_file (${PROJECT_SOURCE_DIR}/${polkit_id}.in
+		${PROJECT_BINARY_DIR}/${polkit_id})
+	install (FILES ${PROJECT_BINARY_DIR}/${polkit_id}
+		DESTINATION ${CMAKE_INSTALL_DATADIR}/polkit-1/actions)
+
+	add_executable (${PROJECT_NAME}-gui ${PROJECT_NAME}-gui.c ${ui_out})
+	set_target_properties (${PROJECT_NAME}-gui PROPERTIES
+		COMPILE_FLAGS "${gtk3_CFLAGS_OTHER}")
+	target_link_libraries (${PROJECT_NAME}-gui ${gtk3_LIBRARIES})
+	install (TARGETS ${PROJECT_NAME}-gui
+		DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif (BUILD_GUI)
+
+set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "SteelSeries Sensei Raw control utility")
+set (CPACK_PACKAGE_VERSION ${project_VERSION})
+set (CPACK_PACKAGE_VENDOR "Premysl Janouch")
+set (CPACK_PACKAGE_CONTACT "Přemysl Janouch <p.janouch@gmail.com>")
+set (CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+
+set (CPACK_GENERATOR "TGZ;ZIP")
+set (CPACK_PACKAGE_FILE_NAME
+	"${PROJECT_NAME}-${project_VERSION}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+
+set (CPACK_SOURCE_GENERATOR "TGZ;ZIP")
+set (CPACK_SOURCE_IGNORE_FILES "/\\\\.git;/build;/CMakeLists.txt.user")
+set (CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${project_VERSION}")
+
+set (CPACK_SET_DESTDIR TRUE)
+include (CPack)

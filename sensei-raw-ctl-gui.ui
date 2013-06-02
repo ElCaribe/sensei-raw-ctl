@@ -1,0 +1,199 @@
+<interface>
+ <object class='GtkAdjustment' id='polling_adj'>
+  <property name='lower'>125</property>
+  <property name='upper'>1000</property>
+ </object>
+ <object class='GtkAdjustment' id='cpi_on_adj'>
+  <property name='lower'>90</property>
+  <property name='upper'>5670</property>
+  <property name='step-increment'>90</property>
+  <property name='page-increment'>90</property>
+ </object>
+ <object class='GtkAdjustment' id='cpi_off_adj'>
+  <property name='lower'>90</property>
+  <property name='upper'>5670</property>
+  <property name='step-increment'>90</property>
+  <property name='page-increment'>90</property>
+ </object>
+ <object class='GtkSizeGroup' id='label_size_group'>
+  <property name='mode'>GTK_SIZE_GROUP_HORIZONTAL</property>
+  <widgets>
+   <widget name='polling_label' />
+   <widget name='cpi_off_label' />
+   <widget name='cpi_on_label' />
+   <widget name='pulsation_label' />
+   <widget name='intensity_label' />
+  </widgets>
+ </object>
+ <object class='GtkWindow' id='win'>
+  <property name='window-position'>GTK_WIN_POS_CENTER</property>
+  <property name='title' translatable='TRUE'>SteelSeries Sensei Raw control utility</property>
+  <property name='border-width'>10</property>
+  <child><object class='GtkNotebook' id='notebook'>
+   <property name='show-tabs'>FALSE</property>
+   <child><object class='GtkHBox' id='probing_box'>
+    <property name='halign'>GTK_ALIGN_CENTER</property>
+    <property name='valign'>GTK_ALIGN_CENTER</property>
+    <property name='spacing'>10</property>
+    <child><object class='GtkSpinner' id='probing_spinner'>
+     <property name='halign'>GTK_ALIGN_CENTER</property>
+     <property name='valign'>GTK_ALIGN_CENTER</property>
+     <property name='active'>TRUE</property>
+    </object></child>
+    <child><object class='GtkLabel' id='probing_label'>
+     <property name='label' translatable='TRUE'>Probing the device...</property>
+    </object></child>
+   </object></child>
+   <child><object class='GtkVBox' id='no_device_box'>
+    <property name='spacing'>10</property>
+    <property name='halign'>GTK_ALIGN_CENTER</property>
+    <property name='valign'>GTK_ALIGN_CENTER</property>
+    <child><object class='GtkLabel' id='no_device_label'>
+     <property name='label' translatable='TRUE'>No suitable device found.</property>
+    </object></child>
+    <child><object class='GtkButton' id='retry_button'>
+     <property name='label' translatable='TRUE'>Retry</property>
+     <property name='halign'>GTK_ALIGN_CENTER</property>
+    </object></child>
+   </object></child>
+   <child><object class='GtkVBox' id='vbox'>
+    <property name='spacing'>10</property>
+    <child><object class='GtkHBox' id='hbox'>
+     <property name='spacing'>10</property>
+     <child>
+      <object class='GtkLabel' id='polling_label'>
+       <property name='label' translatable='TRUE'>Polling</property>
+      </object>
+     </child><child>
+      <object class='GtkScale' id='polling_scale'>
+       <property name='width-request'>200</property>
+       <property name='digits'>0</property>
+       <property name='adjustment'>polling_adj</property>
+       <marks>
+        <mark value='125' />
+        <mark value='250' />
+        <mark value='500' />
+        <mark value='1000' />
+       </marks>
+      </object>
+     </child>
+    </object></child>
+    <child><object class='GtkFrame' id='cpi_frame'>
+     <property name='label' translatable='TRUE'>CPI</property>
+     <property name='label-xalign'>0.5</property>
+     <child><object class='GtkVBox' id='cpi_vbox'>
+      <property name='border-width'>5</property>
+      <child><object class='GtkHBox' id='cpi_off_hbox'>
+       <property name='spacing'>10</property>
+       <child>
+        <object class='GtkLabel' id='cpi_off_label'>
+         <property name='label' translatable='TRUE'>LED off</property>
+        </object><packing>
+         <property name='expand'>FALSE</property>
+         <property name='fill'>FALSE</property>
+        </packing>
+       </child><child>
+        <object class='GtkScale' id='cpi_off_scale'>
+         <property name='width-request'>200</property>
+         <property name='digits'>0</property>
+         <property name='adjustment'>cpi_off_adj</property>
+        </object><packing>
+         <property name='expand'>TRUE</property>
+         <property name='fill'>TRUE</property>
+        </packing>
+       </child>
+      </object></child>
+      <child><object class='GtkHBox' id='cpi_on_hbox'>
+       <property name='spacing'>10</property>
+       <child>
+        <object class='GtkLabel' id='cpi_on_label'>
+         <property name='label' translatable='TRUE'>LED on</property>
+        </object><packing>
+         <property name='expand'>FALSE</property>
+         <property name='fill'>FALSE</property>
+        </packing>
+       </child><child>
+        <object class='GtkScale' id='cpi_on_scale'>
+         <property name='width-request'>200</property>
+         <property name='digits'>0</property>
+         <property name='adjustment'>cpi_on_adj</property>
+        </object><packing>
+         <property name='expand'>TRUE</property>
+         <property name='fill'>TRUE</property>
+        </packing>
+       </child>
+      </object></child>
+     </object></child>
+    </object></child>
+    <child><object class='GtkFrame' id='backlight_frame'>
+     <property name='label' translatable='TRUE'>Backlight</property>
+     <property name='label-xalign'>0.5</property>
+     <child><object class='GtkVBox' id='backlight_box'>
+      <property name='border-width'>5</property>
+      <child><object class='GtkHBox' id='pulsation_box'>
+       <property name='spacing'>10</property>
+       <child>
+        <object class='GtkLabel' id='pulsation_label'>
+         <property name='label' translatable='TRUE'>Pulsation</property>
+        </object><packing>
+         <property name='expand'>FALSE</property>
+         <property name='fill'>FALSE</property>
+        </packing>
+       </child><child>
+        <object class='GtkComboBoxText' id='pulsation_combo'>
+         <items>
+          <item translatable='TRUE'>Steady</item>
+          <item translatable='TRUE'>Slow</item>
+          <item translatable='TRUE'>Medium</item>
+          <item translatable='TRUE'>Fast</item>
+         </items>
+        </object><packing>
+         <property name='expand'>TRUE</property>
+         <property name='fill'>TRUE</property>
+        </packing>
+       </child>
+      </object></child>
+      <child><object class='GtkHBox' id='intensity_box'>
+       <property name='spacing'>10</property>
+       <child>
+        <object class='GtkLabel' id='intensity_label'>
+         <property name='label' translatable='TRUE'>Intensity</property>
+        </object><packing>
+         <property name='expand'>FALSE</property>
+         <property name='fill'>FALSE</property>
+        </packing>
+       </child><child>
+        <object class='GtkComboBoxText' id='intensity_combo'>
+         <items>
+          <item translatable='TRUE'>Off</item>
+          <item translatable='TRUE'>Low</item>
+          <item translatable='TRUE'>Medium</item>
+          <item translatable='TRUE'>High</item>
+         </items>
+        </object><packing>
+         <property name='expand'>TRUE</property>
+         <property name='fill'>TRUE</property>
+        </packing>
+       </child>
+      </object></child>
+     </object></child>
+    </object></child>
+    <child><object class='GtkHBox' id='buttons_box'>
+     <child><object class='GtkButton' id='normal_button'>
+      <property name='label' translatable='TRUE'>Normal mode</property>
+     </object></child>
+     <child><object class='GtkButton' id='legacy_button'>
+      <property name='label' translatable='TRUE'>Legacy mode</property>
+     </object></child>
+     <child><object class='GtkButton' id='apply_button'>
+      <property name='label'>gtk-apply</property>
+      <property name='use-stock'>TRUE</property>
+      <property name='margin-left'>15</property>
+      <property name='can-default'>TRUE</property>
+     </object></child>
+    </object></child>
+   </object></child>
+  </object></child>
+ </object>
+</interface>
+
