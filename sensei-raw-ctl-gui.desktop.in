@@ -1,8 +1,9 @@
 [Desktop Entry]
 Type=Application
-Name=${CMAKE_PROJECT_NAME}-gui
+Name=Sensei Raw Setup
 GenericName=SteelSeries Sensei Raw control utility
 Icon=${CMAKE_PROJECT_NAME}-gui
 Exec=${CMAKE_PROJECT_NAME}-gui
 StartupNotify=true
-Categories=Settings;System;Utility;GTK;
+Categories=GTK;Settings;HardwareSettings;Utility;X-GNOME-Settings-Panel;
+X-GNOME-Settings-Panel=${CMAKE_PROJECT_NAME}-gui

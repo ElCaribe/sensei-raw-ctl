@@ -27,7 +27,7 @@
  </object>
  <object class='GtkWindow' id='win'>
   <property name='window-position'>GTK_WIN_POS_CENTER</property>
-  <property name='title' translatable='TRUE'>SteelSeries Sensei Raw control utility</property>
+  <property name='title' translatable='TRUE'>Sensei Raw Setup</property>
   <property name='border-width'>10</property>
   <child><object class='GtkNotebook' id='notebook'>
    <property name='show-tabs'>FALSE</property>
