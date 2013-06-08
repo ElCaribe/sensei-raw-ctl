@@ -4,8 +4,19 @@ This program makes it possible to change the configuration of your SteelSeries
 Sensei Raw mouse from within Linux, *BSD or any other POSIX-compatible system
 supported by libusb.
 
+Run `sensei-raw-ctl --help' or `man sensei-raw-ctl' for usage information.
+
+If you don't fancy command line tools, there's also a basic GTK+ frontend
+available.  On Ubuntu and its derivates, you should be able to find it in your
+System Settings.
+
 Installation
 ============
+Build dependencies: cmake >= 2.8.5, help2man, libusb >= 1.0,
+                    gtk+ >= 3.0 (optional)
+
+$ git clone git://github.com/pjanouch/sensei-raw-ctl.git
+$ cd sensei-raw-ctl
 $ mkdir build
 $ cd build
 $ cmake .. -DCMAKE_INSTALL_PREFIX=/usr
@@ -15,6 +26,8 @@ Note that there's no "make uninstall" and the GUI needs to be installed in the
 right location to work correctly.
 
 If you don't want the GUI frontend, append -DBUILD_GUI=NO to the cmake command.
+The GUI also isn't going to be built if you don't have the GTK+ 3 development
+packages installed, if your distribution has any.
 
 For Debian-based distros, you can do the following instead of the last step:
 $ cpack -G DEB
