@@ -53,6 +53,29 @@ if (BUILD_GUI)
 		DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif (BUILD_GUI)
 
+find_program (HELP2MAN_EXECUTABLE help2man)
+if (NOT HELP2MAN_EXECUTABLE)
+	message (FATAL_ERROR "help2man not found")
+endif ()
+
+foreach (page ${PROJECT_NAME})
+	set (page_output "${PROJECT_BINARY_DIR}/${page}.1")
+	list (APPEND project_MAN_PAGES "${page_output}")
+	add_custom_command (OUTPUT ${page_output}
+		COMMAND ${HELP2MAN_EXECUTABLE} -N
+			"${PROJECT_BINARY_DIR}/${page}" -o ${page_output}
+		DEPENDS ${PROJECT_NAME}
+		COMMENT "Generating man page for ${page}" VERBATIM)
+endforeach ()
+
+add_custom_target (docs ALL DEPENDS ${project_MAN_PAGES})
+
+foreach (page ${project_MAN_PAGES})
+	string (REGEX MATCH "\\.([0-9])" manpage_suffix "${page}")
+	install (FILES "${page}"
+		DESTINATION "${CMAKE_INSTALL_MANDIR}/man${CMAKE_MATCH_1}")
+endforeach ()
+
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "SteelSeries Sensei Raw control utility")
 set (CPACK_PACKAGE_VERSION ${project_VERSION})
 set (CPACK_PACKAGE_VENDOR "Premysl Janouch")

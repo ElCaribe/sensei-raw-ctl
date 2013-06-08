@@ -281,8 +281,8 @@ struct options
 static void
 show_usage (const char *program_name)
 {
-	printf ("Usage: %s [OPTION]... - configure"
-			" SteelSeries Sensei Raw devices\n\n", program_name);
+	printf ("Usage: %s [OPTION]...\n", program_name);
+	printf ("Configure SteelSeries Sensei Raw devices.\n\n");
 	printf ("  -h, --help      Show this help\n");
 	printf ("  --version       Show program version and exit\n");
 	printf ("  --show          Show current mouse settings and exit\n");
