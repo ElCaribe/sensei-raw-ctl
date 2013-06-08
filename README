@@ -8,6 +8,14 @@ Installation
 ============
 $ mkdir build
 $ cd build
-$ cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
+$ cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 # make install
 
+Note that there's no "make uninstall" and the GUI needs to be installed in the
+right location to work correctly.
+
+If you don't want the GUI frontend, append -DBUILD_GUI=NO to the cmake command.
+
+For Debian-based distros, you can do the following instead of the last step:
+$ cpack -G DEB
+# dpkg -i sensei-raw-ctl-*.deb
