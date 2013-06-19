@@ -30,5 +30,5 @@ The GUI also isn't going to be built if you don't have the GTK+ 3 development
 packages installed, if your distribution has any.
 
 For Debian-based distros, you can do the following instead of the last step:
-$ cpack -G DEB
+$ fakeroot cpack -G DEB
 # dpkg -i sensei-raw-ctl-*.deb
