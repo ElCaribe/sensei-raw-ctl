@@ -10,6 +10,11 @@ If you don't fancy command line tools, there's also a basic GTK+ frontend
 available.  On Ubuntu and its derivates, you should be able to find it in your
 System Settings.
 
+Supported devices
+=================
+ - SteelSeries Sensei Raw
+ - SteelSeries Call of Duty: Black Ops II
+
 Installation
 ============
 Build dependencies: cmake >= 2.8.5, help2man, libusb >= 1.0,

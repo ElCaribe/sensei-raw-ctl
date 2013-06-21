@@ -81,10 +81,33 @@ out:
 	return handle;
 }
 
+/** Search for a device under various product ID's. */
+static libusb_device_handle *
+find_device_list (int vendor,
+	const int *products, size_t n_products, int *error)
+{
+	int err = 0;
+	libusb_device_handle *handle;
+
+	while (n_products--)
+	{
+		handle = find_device (vendor, *products++, &err);
+		if (handle)
+			return handle;
+		if (err)
+			break;
+	}
+
+	if (error != NULL && err != 0)
+		*error = err;
+	return NULL;
+}
+
 // --- Device configuration ----------------------------------------------------
 
 #define USB_VENDOR_STEELSERIES  0x1038
-#define USB_PRODUCT_STEELSERIES_SENSEI  0x1369
+#define USB_PRODUCT_STEELSERIES_SENSEI_RAW  0x1369
+#define USB_PRODUCT_STEELSERIES_COD_BO2  0x136f
 
 #define USB_GET_REPORT  0x01
 #define USB_SET_REPORT  0x09
@@ -511,9 +534,15 @@ main (int argc, char *argv[])
 		ERROR (error_0, "libusb initialisation failed: %s\n",
 			libusb_error_name (result));
 
+	static const int products[] =
+	{
+		USB_PRODUCT_STEELSERIES_SENSEI_RAW,
+		USB_PRODUCT_STEELSERIES_COD_BO2
+	};
+
 	result = 0;
-	libusb_device_handle *device = find_device
-		(USB_VENDOR_STEELSERIES, USB_PRODUCT_STEELSERIES_SENSEI, &result);
+	libusb_device_handle *device = find_device_list (USB_VENDOR_STEELSERIES,
+		products, sizeof products / sizeof products[0], &result);
 	if (!device)
 	{
 		if (result)
