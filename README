@@ -37,3 +37,5 @@ packages installed, if your distribution has any.
 For Debian-based distros, you can do the following instead of the last step:
 $ fakeroot cpack -G DEB
 # dpkg -i sensei-raw-ctl-*.deb
+
+Leave out the fakeroot for CMake >= 2.8.9, it's been fixed since.
