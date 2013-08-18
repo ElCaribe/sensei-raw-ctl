@@ -253,7 +253,7 @@ static void
 on_set_mode_legacy (GtkBuilder *builder)
 {
 	gchar *out, *argv[] = { "pkexec",
-		PROJECT_INSTALL_BINDIR "/" PROJECT_NAME, "--mode", "compat", NULL };
+		PROJECT_INSTALL_BINDIR "/" PROJECT_NAME, "--mode", "legacy", NULL };
 	if (spawn_ctl (argv, &out, builder))
 		g_free (out);
 }
